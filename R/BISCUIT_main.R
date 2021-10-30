@@ -23,7 +23,7 @@
 singlecell_processor = function(
     input_file_name          = stop("missing the raw data table file!"),
     input_data_tab_delimited = TRUE,
-    is_format_genes_cells    =  TRUE,
+    is_format_genes_cells    = TRUE,
     choose_cells             = 3000,
     choose_genes             = 150,
     gene_batch               = 50,
@@ -34,53 +34,69 @@ singlecell_processor = function(
     alpha                    = 1,
     output_folder_name       = "./output") {
 
-    col_palette = color_palette();
+    pip = list(
+        input_file_name          = input_file_name,
+        input_data_tab_delimited = input_data_tab_delimited,
+        is_format_genes_cells    = is_format_genes_cells,
+        choose_cells             = choose_cells,
+        choose_genes             = choose_genes,
+        gene_batch               = gene_batch,
+        num_iter                 = num_iter,
+        num_cores                = num_cores,
+        z_true_labels_avl        = z_true_labels_avl,
+        num_cells_batch          = num_cells_batch,
+        alpha                    = alpha,
+        output_folder_name       = output_folder_name,
+        col_palette              = color_palette()
+    );
 
-    ###output directory creation
+    ### output directory creation
 
-    if( dir.exists(paste0(getwd(),"/", output_folder_name))){
-        file.rename(paste0(getwd(),"/", output_folder_name),paste0(getwd(),"/","BISCUIT_previous_run","/"))
+    if (dir.exists(paste0(getwd(),"/", output_folder_name))) {
+        file.rename(paste0(getwd(),"/", output_folder_name),paste0(getwd(),"/","BISCUIT_previous_run","/"));
     }
 
-    if(! dir.exists(paste0(getwd(),"/",output_folder_name))){
-        dir.create(paste0(getwd(),"/",output_folder_name,"/"))
-        dir.create(paste0(getwd(),"/",output_folder_name,"/plots/"))
-        dir.create(paste0(getwd(),"/",output_folder_name,"/plots/Inferred_labels/"))
-        dir.create(paste0(getwd(),"/",output_folder_name,"/plots/Inferred_labels_per_step_per_batch/"))
-        dir.create(paste0(getwd(),"/",output_folder_name,"/plots/Inferred_alphas_betas/"))
-        dir.create(paste0(getwd(),"/",output_folder_name,"/plots/Inferred_Sigmas/"))
-        dir.create(paste0(getwd(),"/",output_folder_name,"/plots/Inferred_means/"))
-        dir.create(paste0(getwd(),"/",output_folder_name,"/plots/extras/"))
+    if (!dir.exists(paste0(getwd(),"/",output_folder_name))) {
+        dir.create(paste0(getwd(),"/",output_folder_name,"/"));
+        dir.create(paste0(getwd(),"/",output_folder_name,"/plots/"));
+        dir.create(paste0(getwd(),"/",output_folder_name,"/plots/Inferred_labels/"));
+        dir.create(paste0(getwd(),"/",output_folder_name,"/plots/Inferred_labels_per_step_per_batch/"));
+        dir.create(paste0(getwd(),"/",output_folder_name,"/plots/Inferred_alphas_betas/"));
+        dir.create(paste0(getwd(),"/",output_folder_name,"/plots/Inferred_Sigmas/"));
+        dir.create(paste0(getwd(),"/",output_folder_name,"/plots/Inferred_means/"));
+        dir.create(paste0(getwd(),"/",output_folder_name,"/plots/extras/"));
     }
 
     ############## Run BISCUIT ##############
+    start_time_overall <- Sys.time();
 
-    start_time_overall <- Sys.time()
-
-    #1) Prepare the input data. Explain what is input and what has to be the output.
-    process_data();
-
-    #2) Main MCMC engine. Do not change anything. This runs in parallel where each parallel run takes in a matrix X of all cells and a gene batch i.e. dim(X) is numcells x gene_batch.
+    # 1) Prepare the input data. Explain what is input and what has to be the output.
+    process_data(pip);
+    
+    # 2) Main MCMC engine. Do not change anything. This runs in parallel 
+    #    where each parallel run takes in a matrix X of all cells and a 
+    #    gene batch i.e. dim(X) is numcells x gene_batch.
     IMM_Gibbs_MCMC_parallel();
 
-    #3) Postprocess MCMC chains from multiple parallel runs
+    # 3) Postprocess MCMC chains from multiple parallel runs
     post_MCMC_genesplit_merge();
 
-    #4) Compute imputed data based on inferred variables and generate plots
+    # 4) Compute imputed data based on inferred variables and generate 
+    #    plots
     post_process();
     ########################################
 
-    #print(Sys.time() - start_time_overall)
-    curr_time <- Sys.time()
-    print(curr_time - start_time_overall)
-    write(paste('Overall run time: ',curr_time - start_time_overall),file=f1, append=TRUE)
+    curr_time <- Sys.time();
+
+    print(curr_time - start_time_overall);
+    write(paste('Overall run time: ', curr_time - start_time_overall), file = f1, append = TRUE);
 }
 
 post_process = function() {
-    if(num_gene_batches ==1){
+    if (num_gene_batches == 1) {
         parallel_impute_onegenebatch();
         extras_onegenebatch();
-    }else{
+    } else {
         parallel_impute();
         extras();
     }

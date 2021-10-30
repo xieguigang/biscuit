@@ -20,67 +20,74 @@
 #### Modify this portion to accommodate your input data.                                                  ####
 ##############################################################################################################
 
-process_data = function() {
+loadDemoExpression_mRNA_17_Aug_2014 = function(input_file_name) {
+    full.data = data.frame(read.csv(input_file_name, header=TRUE, sep="\t", quote="",stringsAsFactors = TRUE)); # genes x cells
+    dim(full.data)
+    colnames(full.data); #names(full.data),
+    rownames(full.data);
 
-    print("Loading Data")
+    gene_names <- full.data[11:nrow(full.data),1];
 
-    ########
-    if (input_file_name=="expression_mRNA_17-Aug-2014.txt"){
-        full.data = data.frame(read.csv(input_file_name, header=TRUE, sep="\t", quote="",stringsAsFactors = TRUE)); # genes x cells
-        dim(full.data)
-        colnames(full.data); #names(full.data),
-        rownames(full.data);
+    #creating the cellsXgenes data
+    num_rows <- length(c(11:nrow(full.data)))
+    num_cols <- length(c(3:ncol(full.data)))
 
-        gene_names <- full.data[11:nrow(full.data),1];
+    #full.data.1 <- as.matrix(full.data[11:nrow(full.data),3:ncol(full.data)]);
+    full.data.1 <- matrix(as.numeric(as.matrix(full.data[11:nrow(full.data),3:ncol(full.data)])),num_rows,num_cols);
+    dim(full.data.1);
 
-        #creating the cellsXgenes data
-        num_rows <- length(c(11:nrow(full.data)))
-        num_cols <- length(c(3:ncol(full.data)))
-
-        #full.data.1 <- as.matrix(full.data[11:nrow(full.data),3:ncol(full.data)]);
-        full.data.1 <- matrix(as.numeric(as.matrix(full.data[11:nrow(full.data),3:ncol(full.data)])),num_rows,num_cols);
-        dim(full.data.1);
-
-        #getting the true labels
-        if (z_true_labels_avl){
-            z_true <- as.numeric(factor(unlist(full.data[8,][3:(dim(full.data)[2])])));
-        }
-
-
-        full.data.1 <- t(full.data.1); #cells x genes
-
-
-    }else{ #this assumes the input data has both column and row names.
-        #full.data <- data.frame(read.csv(input_file_name, header=TRUE, row.names=1, sep=",",stringsAsFactors = TRUE));
-
-        if(input_data_tab_delimited == TRUE){
-            full.data <- data.frame(read.csv(input_file_name, header=TRUE, row.names=1, sep="\t",stringsAsFactors = TRUE));
-        }else{ #comma-separated input data
-            full.data <- data.frame(read.csv(input_file_name, header=TRUE, row.names=1, sep=",",stringsAsFactors = TRUE));
-        }
-
-        if(is_format_genes_cells == TRUE){
-            full.data <- t(full.data) #cellsxgenes
-        }
-
-
-        dim(full.data)
-        gene_names <- colnames(full.data); #gene_names
-        rownames(full.data); # #cell_names
-
-        #creating the cellsXgenes data
-        full.data.1 <- as.matrix(full.data);
-
+    #getting the true labels
+    if (z_true_labels_avl){
+        z_true <- as.numeric(factor(unlist(full.data[8,][3:(dim(full.data)[2])])));
     }
 
 
+    full.data.1 <- t(full.data.1); #cells x genes
+}
+
+#' Load matrix for single cell data
+#' 
+#' @details this assumes the input data has both column and row names.
+#' 
+loadSingleCellMatrix = function() {
+    #full.data <- data.frame(read.csv(input_file_name, header=TRUE, row.names=1, sep=",",stringsAsFactors = TRUE));
+
+    if(input_data_tab_delimited == TRUE){
+        full.data <- data.frame(read.csv(input_file_name, header=TRUE, row.names=1, sep="\t",stringsAsFactors = TRUE));
+    }else{ #comma-separated input data
+        full.data <- data.frame(read.csv(input_file_name, header=TRUE, row.names=1, sep=",",stringsAsFactors = TRUE));
+    }
+
+    if(is_format_genes_cells == TRUE){
+        full.data <- t(full.data) #cellsxgenes
+    }
 
 
-    dim(full.data.1);
+    dim(full.data)
+    gene_names <- colnames(full.data); #gene_names
+    rownames(full.data); # #cell_names
+
+    #creating the cellsXgenes data
+    full.data.1 <- as.matrix(full.data);
+}
+
+#' Loading Data
+#' 
+process_data = function(pip) {
+    input_file_name = pip$input_file_name;
+    
+    print("Loading Data")
+
+    if (input_file_name=="expression_mRNA_17-Aug-2014.txt"){
+        loadDemoExpression_mRNA_17_Aug_2014(input_file_name);
+    }else{ 
+        # this assumes the input data has both column and row names.
+        loadSingleCellMatrix(); 
+    }
+
+    print(dim(full.data.1));
+
     full.data.1[is.na(full.data.1)] <- 0;
-
-
-
 
     #save(full.data.1,file="full.data.1.RData")
 
@@ -110,10 +117,13 @@ process_data = function() {
     print("Calculating the Fiedler vector of the data")
 
 
-    if (input_file_name=="expression_mRNA_17-Aug-2014.txt"){
-        load(file="fvec.RData")
+    if (input_file_name=="expression_mRNA_17-Aug-2014.txt") {
+        # load internal package demo data
+        # data\fvec.RData
+        data("fvec");
     }else{
-        L.mat <- diag(colsums.emp.cov) - emp.cov; #ensure L.mat is singular p.s.d
+        # ensure L.mat is singular p.s.d
+        L.mat <- diag(colsums.emp.cov) - emp.cov; 
         f.vec <- fiedler.vector(L.mat);
         save(f.vec,file="fvec.RData");
     }
