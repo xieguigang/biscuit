@@ -1,4 +1,6 @@
-.onLoad <- function(libname, pkgname) {
+#' load packages that required
+#' 
+.onLoad = function(libname, pkgname) {
     ############## packages required ##############
 
     library(MCMCpack)
@@ -24,4 +26,6 @@
     #############################################
 }
 
-.flashLoad <- function() .onLoad(NULL, NULL);
+.flashLoad = function() {
+    .onLoad(NULL, NULL);
+} 
