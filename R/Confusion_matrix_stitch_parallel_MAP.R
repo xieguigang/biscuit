@@ -14,27 +14,16 @@
 ##
 ## Code author SP
 
-
-###
-###
-###
-
-
-################
-
-#Construct the global Confusion matrix.
-
-Confusion_matrix_stitch_parallel_MAP = function() {
+#' Construct the global Confusion matrix.
+Confusion_matrix_stitch_parallel_MAP = function(pip) {
 
     print("Computing the global confusion matrix")
     print("Monitor log_CM.txt in outputs folder and debug_CM.txt")
 
     strt_CM <- Sys.time()
 
-
     divsr <- numcells %/% num_cells_batch
     dividend <- numcells %% num_cells_batch
-
 
     CM_local <- function(df){
 
@@ -132,8 +121,6 @@ Confusion_matrix_stitch_parallel_MAP = function() {
     f <- paste0(getwd(),"/",output_folder_name,"/plots/extras/ave_global_Conf_mat.txt");
     write.matrix(ave_CM, file=f, sep="\t")
 
-
-
     ####
     ####
     ####Using the CM to do a k-means
@@ -169,8 +156,13 @@ Confusion_matrix_stitch_parallel_MAP = function() {
     ###########################
     ## Construct the MAP estimates cluster moments
     ##
-    ## Since the splits are in equal sizes, we can create the MAP estimates for the moments by concatenating moments via law of total expectation and law of total moments from the MCMC chains.
-    ## mu_MAP and Sigma_MAP are formed by calculating the means and covariances separately for each batch and averaging those vectors/matrices (with arithmetic mean) to form one total mean/covariance per cluster.
+    ## Since the splits are in equal sizes, we can create the MAP estimates 
+    ## for the moments by concatenating moments via law of total expectation 
+    ## and law of total moments from the MCMC chains.
+    ## 
+    ## mu_MAP and Sigma_MAP are formed by calculating the means and covariances 
+    ## separately for each batch and averaging those vectors/matrices (with 
+    ## arithmetic mean) to form one total mean/covariance per cluster.
     ##
     print("Construct the cluster moments based on k-means of the CM")
     MAP.non.parallel <- FALSE
@@ -224,9 +216,10 @@ Confusion_matrix_stitch_parallel_MAP = function() {
             #diag(Sigma_MAP[[i]]) <- diag(Sigma_MAP[[i]]) + 0.001
         }
 
-    }else{ #cycles per cluster in parallel. If there are space /vector allocation issues, switch MAP.non.parallel to TRUE
-
-
+    }else{ 
+        
+        # cycles per cluster in parallel. If there are space /vector allocation 
+        # issues, switch MAP.non.parallel to TRUE
         MAP_local <- function(i){
 
             write.table(paste0("Cluster in process is: ",i),file=paste0(getwd(),"/",output_folder_name,"/log_CM.txt"),append=TRUE,sep="");

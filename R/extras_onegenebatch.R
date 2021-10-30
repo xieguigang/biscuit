@@ -8,10 +8,12 @@
 ##
 ##################
 
-extras_onegenebatch = function() {
-
+#' Recomputing cluster probabilities of each cell to its cluster
+#' 
+extras_onegenebatch = function(pip) {
     print("Recomputing cluster probabilities of each cell to its cluster")
-    cluster_prob <- rep(0,numcells);
+
+    cluster_prob     <- rep(0,numcells);
     mean_shift_per_K <- matrix(0,gene_batch*num_gene_batches,final_num_K);
 
     # Use this for subsetting the columns (i.e. clusters)
@@ -39,8 +41,6 @@ extras_onegenebatch = function() {
     }
 
     ## max for that cell (below) is not tallying with z_inferred_final for that cell (above block)
-
-
     cluster_prob <- cbind(z_inferred_final_plot[1:numcells],cluster_prob)
     colnames(cluster_prob) <- c("z_inferred", "cluster_probability")
 
@@ -56,8 +56,6 @@ extras_onegenebatch = function() {
         }
     }
 
-
-
     ## write to text file.
 
     f <- paste0(getwd(),"/",output_folder_name,"/plots/extras/cluster_probabilities.csv")
@@ -69,7 +67,7 @@ extras_onegenebatch = function() {
     write.csv(X_tsne_all_global_norm$Y,file=paste0(getwd(),"/",output_folder_name,"/plots/extras/X_tsne_all_global_norm.csv"))
     write.csv(X_tsne_all$Y,file=paste0(getwd(),"/",output_folder_name,"/plots/extras/X_tsne_all.csv"))
 
-    if(z_true_labels_avl){
+    if(pip$z_true_labels_avl){
 
         f <- paste0(getwd(),"/",output_folder_name,"/plots/Inferred_labels/Final_true_inferred_labels_preimputed_X.pdf");
         pdf(file=f);
@@ -113,7 +111,6 @@ extras_onegenebatch = function() {
     write(paste('Number of clusters: ',final_num_K),file=f1, append=TRUE)
     write(paste('Time for MCMC iterations: ',MCMC_time-strt),file=f1, append=TRUE)
 
-
     ## write all output values to text file
 
     f1 <- paste0(getwd(),"/",output_folder_name,"/plots/extras/Output_values.txt")
@@ -124,7 +121,5 @@ extras_onegenebatch = function() {
 
     write(paste('Number of clusters via DPMM ',final_num_K),file=f1, append=TRUE)
     write(paste('cluster distribution ',table(z_inferred_final_plot)),file=f1, append=TRUE)
-
-
 }
 
