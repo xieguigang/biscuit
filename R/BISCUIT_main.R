@@ -4,7 +4,7 @@
 ## Code author SP
 ##
 
-#' Run single cell data pre-processing
+#' call BISCUIT
 #' 
 #' @description run single cell data pre-processing via \code{BISCUIT} algorithm. 
 #' 
@@ -21,7 +21,7 @@
 #' @param output_folder_name give a name for your output folder.
 #' 
 singlecell_processor = function(
-    input_file_name          = "expression_mRNA_17-Aug-2014.txt",
+    input_file_name          = stop("missing the raw data table file!"),
     input_data_tab_delimited = TRUE, 
     is_format_genes_cells    =  TRUE, 
     choose_cells             = 3000,
@@ -32,7 +32,7 @@ singlecell_processor = function(
     z_true_labels_avl        = TRUE,
     num_cells_batch          = 1000,
     alpha                    = 1,
-    output_folder_name       = "output") {
+    output_folder_name       = "./output") {
 
 }
 
