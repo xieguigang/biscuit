@@ -37,9 +37,9 @@ project.data <- function(data, dim_data){
 
 #' Projecting X
 fiedler.vector <- function(data){
-    # the eigenvalues are in decreasing order so 
+    # the eigenvalues are in decreasing order so
     # just extract the 2nd last one.
-    s.eigen <- eigen(data) 
+    s.eigen <- eigen(data)
     s.eigen$vectors[,(ncol(data) -1)]
 }
 
@@ -75,15 +75,15 @@ mds.tau = function(H) {
 }
 
 #' getting distinguishable colours for clusters
-#' 
+#'
 #' @details ref: http://stackoverflow.com/questions/15282580/how-to-generate-a-number-of-most-distinctive-colors-in-r
-#' 
+#'
 color_palette = function(num_col = 40) {
     qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
     # len = 74
     col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
     #pie(rep(1,num_col), col=(col_vector[1:num_col]))
     # or sample if you wish
-    col_palette <- col_vector[1:num_col]; 
+    col_palette <- col_vector[1:num_col];
     col_palette;
 }
