@@ -77,16 +77,12 @@ singlecell_processor = function(
 }
 
 post_process = function() {
-    if(num_gene_batches ==1){
-        
-        source("BISCUIT_parallel_impute_onegenebatch.R")
-        source("BISCUIT_extras_onegenebatch.R")
-    
-    }else{
-        
-        source("BISCUIT_parallel_impute.R")
-        source("BISCUIT_extras.R")
-
+    if(num_gene_batches ==1){        
+        parallel_impute_onegenebatch();
+        extras_onegenebatch();    
+    }else{        
+        parallel_impute();
+        extras();
     }
 }
 
