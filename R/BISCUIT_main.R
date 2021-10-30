@@ -4,8 +4,37 @@
 ## Code author SP
 ##
 
-###
-###
+#' Run single cell data pre-processing
+#' 
+#' @description run single cell data pre-processing via \code{BISCUIT} algorithm. 
+#' 
+#' @param input_data_tab_delimited set to TRUE if the input data is tab-delimited
+#' @param is_format_genes_cells set to TRUE if input data has rows as genes and columns as cells
+#' @param choose_cells comment if you want all the cells to be considered
+#' @param choose_genes comment if you want all the genes to be considered
+#' @param gene_batch number of genes per batch, therefore num_batches = choose_genes (or numgenes)/gene_batch. Max value is 150
+#' @param num_iter number of iterations, choose based on data size.
+#' @param num_cores number of cores for parallel processing. Ensure that detectCores() > 1 for parallel processing to work, else set num_cores to 1.
+#' @param z_true_labels_avl set this to TRUE if the true labels of cells are available, else set it to FALSE. If TRUE, ensure to populate 'z_true' with the true labels in 'BISCUIT_process_data.R'
+#' @param num_cells_batch set this to 1000 if input number of cells is in the 1000s, else set it to 100.
+#' @param alpha DPMM dispersion parameter. A higher value spins more clusters whereas a lower value spins lesser clusters.
+#' @param output_folder_name give a name for your output folder.
+#' 
+singlecell_processor = function(
+    input_file_name          = "expression_mRNA_17-Aug-2014.txt",
+    input_data_tab_delimited = TRUE, 
+    is_format_genes_cells    =  TRUE, 
+    choose_cells             = 3000,
+    choose_genes             = 150,
+    gene_batch               = 50,
+    num_iter                 = 20,
+    num_cores                = detectCores() - 4,
+    z_true_labels_avl        = TRUE,
+    num_cells_batch          = 1000,
+    alpha                    = 1,
+    output_folder_name       = "output") {
+
+}
 
 col_palette = color_palette(); 
 
