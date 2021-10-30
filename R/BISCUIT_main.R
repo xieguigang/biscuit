@@ -7,16 +7,7 @@
 ###
 ###
 
-
-###### getting distinguishable colours for clusters #####
-##ref: http://stackoverflow.com/questions/15282580/how-to-generate-a-number-of-most-distinctive-colors-in-r
-##
-
-qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
-col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals))) #len = 74
-num_col <- 40
-#pie(rep(1,num_col), col=(col_vector[1:num_col]))
-col_palette <- col_vector[1:num_col]; # or sample if you wish
+col_palette = color_palette(); 
 
 ###output directory creation
 

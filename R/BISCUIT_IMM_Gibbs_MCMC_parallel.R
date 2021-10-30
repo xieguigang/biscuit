@@ -561,69 +561,46 @@ main.fun <- function(r)
     return(mcmc)
 }
 
+IMM_Gibbs_MCMC_parallel = function() {
+    # Start the cluster and register with doSNOW
+    cl <- makeCluster(num_cores, type = "SOCK",outfile="debug.txt") #opens multiple socket connections
+    clusterExport(cl, c("main.fun", "IMM.MCMC"))
+    registerDoSNOW(cl)
 
 
 
-##
-##
-##
+    ###Call MCMC per gene split, in parallel
+    print("Monitor log.txt and outputs/plots/ folder for outputs")
+    strt <- Sys.time()
 
+    results.all.MCMC <- list()
+    results.per.MCMC <- list()
+    #num_gene_sub_batches <- 2
 
-# Start the cluster and register with doSNOW
-cl <- makeCluster(num_cores, type = "SOCK",outfile="debug.txt") #opens multiple socket connections
-clusterExport(cl, c("main.fun", "IMM.MCMC"))
-registerDoSNOW(cl)
+    runs.all <- floor(num_gene_batches/num_gene_sub_batches)
+    print(paste0("floor(num_gene_batches/num_gene_sub_batches): ", runs.all))
 
+    print("MCMC begins")
+    print("Begin parallel processing of gene splits");
 
+    for(r_all in 1:runs.all){
+        
+        print(paste("Beginning of batch ",r_all));
 
-###Call MCMC per gene split, in parallel
-print("Monitor log.txt and outputs/plots/ folder for outputs")
-strt <- Sys.time()
-
-results.all.MCMC <- list()
-results.per.MCMC <- list()
-#num_gene_sub_batches <- 2
-
-runs.all <- floor(num_gene_batches/num_gene_sub_batches)
-print(paste0("floor(num_gene_batches/num_gene_sub_batches): ", runs.all))
-
-print("MCMC begins")
-print("Begin parallel processing of gene splits");
-
-for(r_all in 1:runs.all){
-    
-    print(paste("Beginning of batch ",r_all));
-
-    results.per.MCMC <- foreach(r=((1+(num_gene_sub_batches*(r_all-1))):(num_gene_sub_batches*r_all)),.packages=c("Rtsne","lattice","MASS","bayesm","robustbase","chron","mnormt","MCMCpack", "coda","Matrix", "mvtnorm")) %dopar% {
-        values <- list()
-        values <- main.fun(r)
-        return(list(unlist(values[[1]]),unlist(values[[2]]),unlist(values[[3]]),values[[4]],values[[5]],values[[6]])) ##z, alpha, beta, mu and Sigma
+        results.per.MCMC <- foreach(r=((1+(num_gene_sub_batches*(r_all-1))):(num_gene_sub_batches*r_all)),.packages=c("Rtsne","lattice","MASS","bayesm","robustbase","chron","mnormt","MCMCpack", "coda","Matrix", "mvtnorm")) %dopar% {
+            values <- list()
+            values <- main.fun(r)
+            return(list(unlist(values[[1]]),unlist(values[[2]]),unlist(values[[3]]),values[[4]],values[[5]],values[[6]])) ##z, alpha, beta, mu and Sigma
+        }
+        results.all.MCMC[[r_all]] <- results.per.MCMC
+        print(paste("End of batch ",r_all));
     }
-    results.all.MCMC[[r_all]] <- results.per.MCMC
-    print(paste("End of batch ",r_all));
+        
+    print("End of parallel runs");
+
+
+    stopCluster(cl)
+    #print(Sys.time()-strt)
+    MCMC_time <- Sys.time()
+    print(MCMC_time-strt)
 }
-    
-print("End of parallel runs");
-
-
-stopCluster(cl)
-#print(Sys.time()-strt)
-MCMC_time <- Sys.time()
-print(MCMC_time-strt)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
