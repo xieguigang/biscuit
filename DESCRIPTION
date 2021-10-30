@@ -1,0 +1,11 @@
+Package: biscuit
+Type: Package
+Title: biodeep MS/MS alignment and Build internal reference database
+Version: 5.12.2335.54
+Date: 2021-03-20
+Author: xieguigang
+Maintainer: xieguigang <gg.xie@bionovogene.com>
+Description: biodeep MS/MS alignment and Build internal reference database,
+    contains internal database: metlin, monoall LC_MS databases.
+License: bionovogene
+RoxygenNote: 7.1.1
