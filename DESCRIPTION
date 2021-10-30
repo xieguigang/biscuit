@@ -1,11 +1,11 @@
 Package: biscuit
 Type: Package
-Title: biodeep MS/MS alignment and Build internal reference database
+Title: R Codebase for BISCUIT: Infinite Mixture Model to cluster and impute single cells.
 Version: 5.12.2335.54
 Date: 2021-03-20
 Author: xieguigang
 Maintainer: xieguigang <gg.xie@bionovogene.com>
-Description: biodeep MS/MS alignment and Build internal reference database,
-    contains internal database: metlin, monoall LC_MS databases.
-License: bionovogene
+Description: R Codebase for BISCUIT: Infinite Mixture Model 
+    to cluster and impute single cells.
+License: MIT
 RoxygenNote: 7.1.1
