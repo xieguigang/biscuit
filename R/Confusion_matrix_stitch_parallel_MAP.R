@@ -15,6 +15,7 @@
 ## Code author SP
 
 #' Construct the global Confusion matrix.
+#' 
 Confusion_matrix_stitch_parallel_MAP = function(pip) {
 
     print("Computing the global confusion matrix")

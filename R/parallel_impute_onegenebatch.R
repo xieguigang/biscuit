@@ -4,7 +4,7 @@
 ## Code author SP
 ##################
 
-parallel_impute_onegenebatch = function() {
+parallel_impute_onegenebatch = function(pip) {
 
     X_std_all <- X_all;
 

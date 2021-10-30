@@ -69,6 +69,9 @@ singlecell_processor = function(
         dir.create(paste0(getwd(),"/",output_folder_name,"/plots/extras/"));
     }
 
+    print("View your analysis arguments:");
+    str(pip);
+
     ############## Run BISCUIT ##############
     start_time_overall <- Sys.time();
 

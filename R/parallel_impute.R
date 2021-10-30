@@ -16,7 +16,7 @@
 ## Code author SP
 ##################
 
-parallel_impute = function() {
+parallel_impute = function(pip) {
     X_std_all <- X_all;
 
     final_num_K <- length(unique(z_inferred_final));

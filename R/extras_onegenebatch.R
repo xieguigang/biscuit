@@ -8,7 +8,9 @@
 ##
 ##################
 
-#' Recomputing cluster probabilities of each cell to its cluster
+#' extras one gene batch
+#' 
+#' @description Recomputing cluster probabilities of each cell to its cluster
 #' 
 extras_onegenebatch = function(pip) {
     print("Recomputing cluster probabilities of each cell to its cluster")
