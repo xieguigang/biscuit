@@ -21,12 +21,12 @@ extras_onegenebatch = function() {
     mean_rot_per_K <- Sigma_final
 
     for (i in 1:final_num_K){
-            # mean_shift_per_K[,uq_z[i]] <- mean_alpha_inferred_per_K[uq_z[i],] * mu_final[,uq_z[i]];
-            # mean_shift_per_K[,uq_z[i]] <-  mu_final[,uq_z[i]];
-            mean_shift_per_K[,cnames[i]] <-  mu_final[,cnames[i]];
+        # mean_shift_per_K[,uq_z[i]] <- mean_alpha_inferred_per_K[uq_z[i],] * mu_final[,uq_z[i]];
+        # mean_shift_per_K[,uq_z[i]] <-  mu_final[,uq_z[i]];
+        mean_shift_per_K[,cnames[i]] <-  mu_final[,cnames[i]];
 
-            mean_rot_per_K[,,cnames[i]] <- matrix(forceSymmetric(Sigma_final[,,cnames[i]]),numgenes,numgenes);
-            #mean_rot_per_K[,,uq_z[i]] <- forceSymmetric(Sigma_final[,,uq_z[i]]);
+        mean_rot_per_K[,,cnames[i]] <- matrix(forceSymmetric(Sigma_final[,,cnames[i]]),numgenes,numgenes);
+        #mean_rot_per_K[,,uq_z[i]] <- forceSymmetric(Sigma_final[,,uq_z[i]]);
     }
 
     ###above we removed the dummy column from the moments
@@ -70,28 +70,28 @@ extras_onegenebatch = function() {
     write.csv(X_tsne_all$Y,file=paste0(getwd(),"/",output_folder_name,"/plots/extras/X_tsne_all.csv"))
 
     if(z_true_labels_avl){
-        
+
         f <- paste0(getwd(),"/",output_folder_name,"/plots/Inferred_labels/Final_true_inferred_labels_preimputed_X.pdf");
         pdf(file=f);
         par(mfrow=c(2,1))
         plot(X_tsne_all$Y[,1],X_tsne_all$Y[,2],col = col_palette[1*(z_true)],  main="t-SNE of pre-imputed X (true labels)");
         plot(X_tsne_all$Y[,1],X_tsne_all$Y[,2],col = col_palette[1*(z_inferred_final_plot)],  main="t-SNE of pre-imputed X (inferred labels)");
         dev.off()
-        
+
         f <- paste0(getwd(),"/",output_folder_name,"/plots/Inferred_labels/Final_true_inferred_labels_imputed_X.pdf");
         pdf(file=f);
         par(mfrow=c(2,1))
         plot(Y_tsne$Y[,1],Y_tsne$Y[,2],col = col_palette[1*(z_true)],  main="t-SNE of imputed X (true labels)");
         plot(Y_tsne$Y[,1],Y_tsne$Y[,2],col = col_palette[1*(z_inferred_final_plot)],  main="t-SNE of imputed X (inferred labels)");
         dev.off()
-        
+
         f <- paste0(getwd(),"/",output_folder_name,"/plots/Inferred_labels/Final_true_inferred_labels_globalnorm_X.pdf");
         pdf(file=f);
         par(mfrow=c(2,1))
         plot(X_tsne_all_global_norm$Y[,1],X_tsne_all_global_norm$Y[,2],col = col_palette[1*(z_true)],  main="t-SNE of global normalised X (true labels)");
         plot(X_tsne_all_global_norm$Y[,1],X_tsne_all_global_norm$Y[,2],col = col_palette[1*(z_inferred_final_plot)],  main="t-SNE of global normalised X (inferred labels)");
         dev.off()
-        
+
     }
 
     ## write all input parameters to text file

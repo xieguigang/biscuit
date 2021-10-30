@@ -31,11 +31,11 @@ parallel_impute_onegenebatch = function() {
 
 
     for (i in 1:final_num_K){
-        
+
         cell_ids <- which(z_inferred_final == uq_z[i]);
         mean_alpha_inferred_per_K[uq_z[i],] <- median(alpha_inferred_final[cell_ids])
         mean_beta_inferred_per_K[uq_z[i],] <- median(beta_inferred_final[cell_ids])
-        
+
         A_rt[uq_z[i],] <- rep(1/sqrt(mean_beta_inferred_per_K[uq_z[i],]),numgenes);
     }
 
@@ -45,32 +45,32 @@ parallel_impute_onegenebatch = function() {
     print("Computing imputed data based on inferred alphas, betas, mu_k, Sigma_k and z")
 
     Impute_batches <- function(df){
-        
-        
+
+
         df_indicator <- paste0("Imputed batch in process is: ",df);
         write.table(df_indicator,file=paste0(getwd(),"/",output_folder_name,"/log_CM.txt"),append=TRUE,sep="");
 
 
 
         Y_rt <- matrix(0,length(((1+(num_cells_batch*(df-1))):(num_cells_batch*df))), numgenes)
-        
+
 
 
 
         rownames(Y_rt) <- as.character(((1+(num_cells_batch*(df-1))):(num_cells_batch*df)))
         colnames(Y_rt) <- as.character(1:numgenes)
-    
-        
-        
+
+
+
         for (cell_ind in((1+(num_cells_batch*(df-1))):(num_cells_batch*df))){
             #print(paste("imputing cell",cell_ind));
-        
+
             g <- z_inferred_final[cell_ind];
-            
+
             b <- (diag(numgenes) - mean_alpha_inferred_per_K[g,]*diag(A_rt[g,])) %*%(mu_final[,g])
-            
+
             Y_rt[as.character(cell_ind),] <- t(diag(A_rt[g,]) %*% matrix(X_std_all[cell_ind,],numgenes,1) + b)
-        
+
         }
         return(list(Y_rt))
 
@@ -114,17 +114,17 @@ parallel_impute_onegenebatch = function() {
         Y_rt_final <- rbind(Y_rt_final,global_imputation[[df]][[1]]);
 
     }
-        
+
 
 
     ##Taking care of the remaining cells that fell off the parallel bins
 
     if (dividend !=0){
-    
-    
+
+
         df_indicator <- paste0("Imputed Batch in process is: ",divsr+1);
         write.table(df_indicator,file=paste0(getwd(),"/",output_folder_name,"/log_CM.txt"),append=TRUE,sep="");
-        
+
         write.table("Cells selected are ",file=paste0(getwd(),"/",output_folder_name,"/log_CM.txt"),append=TRUE,sep="");
         write.table(((num_cells_batch*divsr+1):(num_cells_batch*divsr+dividend)),file=paste0(getwd(),"/",output_folder_name,"/log_CM.txt"),append=TRUE,sep="");
         Y_rt <- matrix(0, dividend, numgenes)
@@ -135,19 +135,19 @@ parallel_impute_onegenebatch = function() {
 
         for ( cell_ind in (num_cells_batch*divsr+1):(num_cells_batch*divsr+dividend)){
             #print(paste("imputing cell",cell_ind));
-            
+
             g <- z_inferred_final[cell_ind];
-            
+
             b <- (diag(numgenes) - mean_alpha_inferred_per_K[g,]*diag(A_rt[g,])) %*%(mu_final[,g])
-            
+
             Y_rt[as.character(cell_ind),] <- t(diag(A_rt[g,]) %*% matrix(X_std_all[cell_ind,],numgenes,1) + b)
         }
-        
-        
+
+
 
         Y_rt_final <- rbind(Y_rt_final,Y_rt);
 
-        
+
     }
 
 

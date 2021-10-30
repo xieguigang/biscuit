@@ -13,37 +13,37 @@ post_MCMC_genesplit_merge = function() {
     if(num_gene_batches > 1){
         alpha_inferred_final <- matrix(0,numcells, 1);
         beta_inferred_final <- matrix(0,numcells,1);
-        
+
         for(a in 1:length(results.all.MCMC)){
             for(b in 1:num_gene_sub_batches){
-                    for (j in 1:N){
-                        alpha_inferred_final[j] <- alpha_inferred_final[j] + as.numeric(results.all.MCMC[[a]][[b]][[2]])[j];
-                        
-                        beta_inferred_final[j] <- beta_inferred_final[j] + as.numeric(results.all.MCMC[[a]][[b]][[3]])[j];
-                    }
+                for (j in 1:N){
+                    alpha_inferred_final[j] <- alpha_inferred_final[j] + as.numeric(results.all.MCMC[[a]][[b]][[2]])[j];
+
+                    beta_inferred_final[j] <- beta_inferred_final[j] + as.numeric(results.all.MCMC[[a]][[b]][[3]])[j];
+                }
             }
         }
-        
+
         print("Merging gene splits")
 
         Confusion_matrix_stitch_parallel_MAP();
 
     }else{
-        
-    
+
+
         mu_final <- results.all.MCMC[[num_gene_batches]][[num_gene_sub_batches]][[4]]; #numgenes x K (c1,c2..)
         Sigma_final <- results.all.MCMC[[num_gene_batches]][[num_gene_sub_batches]][[5]]; #numgenes x numgenes X K (c1,c2..)
-        
-        
+
+
         alpha_inferred_final <- as.numeric(results.all.MCMC[[num_gene_batches]][[num_gene_sub_batches]][[2]]);
         beta_inferred_final <- as.numeric(results.all.MCMC[[num_gene_batches]][[num_gene_sub_batches]][[3]]);
-    
-        
+
+
         z_inferred_final_plot <- as.numeric(results.all.MCMC[[num_gene_batches]][[num_gene_sub_batches]][[1]]); # for classes that are missing z_inferred_final will be appropriately corrected. So the values in results.all.MCMC will not be in sync after as.numeric is applied. This is beneficial for plotting.
-        
+
         z_inferred_final <- results.all.MCMC[[num_gene_batches]][[num_gene_sub_batches]][[1]]; # true labels as per logical subscripting.
-        
-        
+
+
 
         f <- paste0(getwd(),"/",output_folder_name,"/plots/Inferred_labels/Final_inferred_one_split.pdf");
         pdf(file=f);

@@ -30,47 +30,47 @@ process_data = function() {
         dim(full.data)
         colnames(full.data); #names(full.data),
         rownames(full.data);
-        
+
         gene_names <- full.data[11:nrow(full.data),1];
-        
+
         #creating the cellsXgenes data
         num_rows <- length(c(11:nrow(full.data)))
         num_cols <- length(c(3:ncol(full.data)))
-        
+
         #full.data.1 <- as.matrix(full.data[11:nrow(full.data),3:ncol(full.data)]);
         full.data.1 <- matrix(as.numeric(as.matrix(full.data[11:nrow(full.data),3:ncol(full.data)])),num_rows,num_cols);
         dim(full.data.1);
-        
+
         #getting the true labels
         if (z_true_labels_avl){
-                z_true <- as.numeric(factor(unlist(full.data[8,][3:(dim(full.data)[2])])));
+            z_true <- as.numeric(factor(unlist(full.data[8,][3:(dim(full.data)[2])])));
         }
-        
-        
+
+
         full.data.1 <- t(full.data.1); #cells x genes
-        
-        
+
+
     }else{ #this assumes the input data has both column and row names.
         #full.data <- data.frame(read.csv(input_file_name, header=TRUE, row.names=1, sep=",",stringsAsFactors = TRUE));
-        
+
         if(input_data_tab_delimited == TRUE){
             full.data <- data.frame(read.csv(input_file_name, header=TRUE, row.names=1, sep="\t",stringsAsFactors = TRUE));
         }else{ #comma-separated input data
             full.data <- data.frame(read.csv(input_file_name, header=TRUE, row.names=1, sep=",",stringsAsFactors = TRUE));
         }
-        
+
         if(is_format_genes_cells == TRUE){
             full.data <- t(full.data) #cellsxgenes
         }
-        
-        
+
+
         dim(full.data)
         gene_names <- colnames(full.data); #gene_names
         rownames(full.data); # #cell_names
-        
+
         #creating the cellsXgenes data
         full.data.1 <- as.matrix(full.data);
-        
+
     }
 
 
@@ -91,7 +91,7 @@ process_data = function() {
     plot(sort(stddev.genes,decreasing=T),typ='o')
     dev.off();
     #full.data.2 <- full.data.1[,order(stddev.genes,decreasing=TRUE)];
-    #gene_names <- gene_names[order(stddev.genes,decreasing=T)]; 
+    #gene_names <- gene_names[order(stddev.genes,decreasing=T)];
 
     #Idea 2 to get meaningful genes: perform disparity check between rows and columns
     emp.cov <- cov(full.data.1);
@@ -189,7 +189,7 @@ process_data = function() {
     # preparing the dataset as per user-defined number of cells and genes
 
 
-        
+
     full.data.3 <- full.data.2[1:numcells,1:numgenes];
 
     ## Ensure data is numeric

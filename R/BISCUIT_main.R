@@ -1,13 +1,13 @@
 ## 21st Dec 2016
-## BISCUIT main and helper functions 
+## BISCUIT main and helper functions
 ## main()
 ## Code author SP
 ##
 
 #' call BISCUIT
-#' 
-#' @description run single cell data pre-processing via \code{BISCUIT} algorithm. 
-#' 
+#'
+#' @description run single cell data pre-processing via \code{BISCUIT} algorithm.
+#'
 #' @param input_data_tab_delimited set to TRUE if the input data is tab-delimited
 #' @param is_format_genes_cells set to TRUE if input data has rows as genes and columns as cells
 #' @param choose_cells comment if you want all the cells to be considered
@@ -19,11 +19,11 @@
 #' @param num_cells_batch set this to 1000 if input number of cells is in the 1000s, else set it to 100.
 #' @param alpha DPMM dispersion parameter. A higher value spins more clusters whereas a lower value spins lesser clusters.
 #' @param output_folder_name give a name for your output folder.
-#' 
+#'
 singlecell_processor = function(
     input_file_name          = stop("missing the raw data table file!"),
-    input_data_tab_delimited = TRUE, 
-    is_format_genes_cells    =  TRUE, 
+    input_data_tab_delimited = TRUE,
+    is_format_genes_cells    =  TRUE,
     choose_cells             = 3000,
     choose_genes             = 150,
     gene_batch               = 50,
@@ -34,7 +34,7 @@ singlecell_processor = function(
     alpha                    = 1,
     output_folder_name       = "./output") {
 
-    col_palette = color_palette(); 
+    col_palette = color_palette();
 
     ###output directory creation
 
@@ -77,10 +77,10 @@ singlecell_processor = function(
 }
 
 post_process = function() {
-    if(num_gene_batches ==1){        
+    if(num_gene_batches ==1){
         parallel_impute_onegenebatch();
-        extras_onegenebatch();    
-    }else{        
+        extras_onegenebatch();
+    }else{
         parallel_impute();
         extras();
     }

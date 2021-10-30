@@ -29,7 +29,7 @@ getmode <- function(v) {
 ######### Projecting X
 
 project.data <- function(data, dim_data){
-    
+
     S <- data %*% t(data)
     Sc <- centralize.mat(S)
     Sc <- 0.5*(Sc + t(Sc))
@@ -38,7 +38,7 @@ project.data <- function(data, dim_data){
     if(length(w) < dim_data){
         w <- c(1:dim_data)
     }
-    
+
     sq_diag <- diag(sqrt((eig$values)[w]))
     sq_diag[is.na(sq_diag)] <- 0.001;
     data_pca <- (eig$vectors)[,w] %*% sq_diag
@@ -51,10 +51,10 @@ project.data <- function(data, dim_data){
 ######### Projecting X
 
 fiedler.vector <- function(data){
-    
+
     s.eigen <- eigen(data) # the eigenvalues are in decreasing order so just extract the 2nd last one.
     return(s.eigen$vectors[,(ncol(data) -1)])
-    
+
 }
 
 ############
