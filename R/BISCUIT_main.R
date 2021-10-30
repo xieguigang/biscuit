@@ -34,6 +34,9 @@ singlecell_processor = function(
     alpha                    = 1,
     output_folder_name       = "./output") {
 
+    require(dplyr);
+    require(magrittr);
+
     pip = list(
         input_file_name          = input_file_name,
         input_data_tab_delimited = input_data_tab_delimited,
@@ -51,7 +54,6 @@ singlecell_processor = function(
     );
 
     ### output directory creation
-
     if (dir.exists(paste0(getwd(),"/", output_folder_name))) {
         file.rename(paste0(getwd(),"/", output_folder_name),paste0(getwd(),"/","BISCUIT_previous_run","/"));
     }
@@ -70,35 +72,32 @@ singlecell_processor = function(
     ############## Run BISCUIT ##############
     start_time_overall <- Sys.time();
 
-    # 1) Prepare the input data. Explain what is input and what has to be the output.
-    process_data(pip);
-    
-    # 2) Main MCMC engine. Do not change anything. This runs in parallel 
+    # 1) [process_data] Prepare the input data. Explain what is input and what has to be the output.
+    # 2) [IMM_Gibbs_MCMC_parallel] Main MCMC engine. Do not change anything. This runs in parallel 
     #    where each parallel run takes in a matrix X of all cells and a 
     #    gene batch i.e. dim(X) is numcells x gene_batch.
-    IMM_Gibbs_MCMC_parallel();
-
-    # 3) Postprocess MCMC chains from multiple parallel runs
-    post_MCMC_genesplit_merge();
-
-    # 4) Compute imputed data based on inferred variables and generate 
+    # 3) [post_MCMC_genesplit_merge] Postprocess MCMC chains from multiple parallel runs
+    # 4) [post_process] Compute imputed data based on inferred variables and generate 
     #    plots
-    post_process();
+    process_data(pip) %>%        
+        IMM_Gibbs_MCMC_parallel() %>%    
+        post_MCMC_genesplit_merge() %>%    
+        post_process();
     ########################################
 
     curr_time <- Sys.time();
 
     print(curr_time - start_time_overall);
     write(paste('Overall run time: ', curr_time - start_time_overall), file = f1, append = TRUE);
+
+    invisible(NULL);
 }
 
-post_process = function() {
-    if (num_gene_batches == 1) {
-        parallel_impute_onegenebatch();
-        extras_onegenebatch();
+post_process = function(pip) {
+    if (pip$num_gene_batches == 1) {
+        parallel_impute_onegenebatch(pip) %>% extras_onegenebatch();
     } else {
-        parallel_impute();
-        extras();
+        parallel_impute(pip) %>% extras();
     }
 }
 
