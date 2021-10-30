@@ -1,6 +1,14 @@
-#' load packages that required
-#' 
 .onLoad = function(libname, pkgname) {
+    tryCatch({
+        .require_packages();
+    }, error = function(ex) {
+        warning(ex);
+    });
+}
+
+#' load packages that required
+#'
+.require_packages = function() {
     ############## packages required ##############
 
     library(MCMCpack)
