@@ -9,7 +9,7 @@
 ##################
 ##################
 
-extras = function() {
+extras = function(pip) {
     print("Recomputing cluster probabilities of each cell to its cluster")
     cluster_prob <- matrix(0,numcells,2);
     mean_shift_per_K <- matrix(0,gene_batch*num_gene_batches,final_num_K);

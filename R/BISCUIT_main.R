@@ -93,6 +93,11 @@ singlecell_processor = function(
     invisible(NULL);
 }
 
+#' Compute imputed data based on inferred variables 
+#' 
+#' @description Compute imputed data based on inferred variables 
+#'   and generate plots.
+#' 
 post_process = function(pip) {
     if (pip$num_gene_batches == 1) {
         parallel_impute_onegenebatch(pip) %>% extras_onegenebatch();

@@ -73,9 +73,11 @@ loadSingleCellMatrix = function() {
 
 #' Loading Data
 #' 
+#' @description Prepare the input data. Explain what is input and what has to be the output.
+#' 
 process_data = function(pip) {
     input_file_name = pip$input_file_name;
-    
+
     print("Loading Data")
 
     if (input_file_name=="expression_mRNA_17-Aug-2014.txt"){

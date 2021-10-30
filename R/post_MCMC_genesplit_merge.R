@@ -5,11 +5,11 @@
 ##
 ## Code author SP
 
-
-
-######
-# Combine the runs/gene_batches
-post_MCMC_genesplit_merge = function() {
+#' Combine the runs/gene_batches
+#' 
+#' @description Postprocess MCMC chains from multiple parallel runs
+#' 
+post_MCMC_genesplit_merge = function(pip) {
     if(num_gene_batches > 1){
         alpha_inferred_final <- matrix(0,numcells, 1);
         beta_inferred_final <- matrix(0,numcells,1);

@@ -9,11 +9,7 @@
 ##
 ## Code author SP
 
-
-####### Main MCMC Engine #######################
-####### DO NOT change anything in IMM.MCMC() ###########
-
-IMM.MCMC <- function(r){
+IMM.MCMC <- function(r) {
 
     ##import process_data_rerun.R##
     #############################################################################################
@@ -561,7 +557,15 @@ main.fun <- function(r)
     return(mcmc)
 }
 
-IMM_Gibbs_MCMC_parallel = function() {
+#' Main MCMC Engine #######################
+#' 
+#' @description Main MCMC engine. Do not change anything. This runs in parallel 
+#'    where each parallel run takes in a matrix X of all cells and a 
+#'    gene batch i.e. dim(X) is numcells x gene_batch.
+#' 
+#' @details DO NOT change anything in IMM.MCMC()
+#' 
+IMM_Gibbs_MCMC_parallel = function(pip) {
     # Start the cluster and register with doSNOW
     cl <- makeCluster(num_cores, type = "SOCK",outfile="debug.txt") #opens multiple socket connections
     clusterExport(cl, c("main.fun", "IMM.MCMC"))
