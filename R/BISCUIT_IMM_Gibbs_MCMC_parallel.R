@@ -122,7 +122,7 @@ IMM.MCMC <- function(r){
     dev.off()
 
 
-    ####"Gibbs_DPGMM_BISCUIT_alpha_beta.R" for r = 1 and "Gibbs_DPGMM_BISCUIT_alpha_beta_propagate.R" for r > 1####
+    ####"Gibbs_DPGMM_BISCUIT_alpha_beta" for r = 1 and "Gibbs_DPGMM_BISCUIT_alpha_beta_propagate" for r > 1####
     #####################################################################################################
     #####################################################################################################
     #####################################################################################################

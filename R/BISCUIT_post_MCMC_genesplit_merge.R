@@ -25,8 +25,8 @@ post_MCMC_genesplit_merge = function() {
         }
         
         print("Merging gene splits")
-        #source("Confusion_matrix_stitch_old_nonparallel_MAP.R")
-        source("Confusion_matrix_stitch_parallel_MAP.R")
+
+        Confusion_matrix_stitch_parallel_MAP();
 
     }else{
         
